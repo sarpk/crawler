@@ -34,7 +34,10 @@ public class LocalDataCollectorController {
 			System.out.println("\t numberOfCralwers (number of concurrent threads)");
 			return;
 		}*/
-		String rootFolder = "C:/crawl/another";
+		String rootFolder = "C:/crawl2/another";
+		String webAddress = "http://www.qut.edu.au/";
+		Addresses.webAddressToBeChecked = webAddress;
+		Addresses.fileLocation = rootFolder;
 		int numberOfCrawlers = 100;
 		CrawlConfig config = new CrawlConfig();
 		config.setCrawlStorageFolder(rootFolder);
@@ -46,7 +49,8 @@ public class LocalDataCollectorController {
 		RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
 		CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
 
-		controller.addSeed("http://www.qut.edu.au/");
+		controller.addSeed(webAddress);
+		
 		controller.start(LocalDataCollectorCrawler.class, numberOfCrawlers);
 
 		List<Object> crawlersLocalData = controller.getCrawlersLocalData();

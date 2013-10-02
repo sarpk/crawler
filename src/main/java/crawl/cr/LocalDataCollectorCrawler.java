@@ -34,20 +34,21 @@ import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
 
 public class LocalDataCollectorCrawler extends WebCrawler {
-	String downloadFolder = "C:/crawl/download/";
+
+	//String downloadFolder = "C:/crawl/download/";
 	Pattern filters = Pattern.compile(".*(\\.(css|js|bmp|gif|jpe?g" + "|png|tiff?|mid|mp2|mp3|mp4"
 			+ "|wav|avi|mov|mpeg|ram|m4v|pdf" + "|rm|smil|wmv|swf|wma|zip|rar|gz))$");
 
 	CrawlStat myCrawlStat;
-
+	String downloadFolder = Addresses.fileLocation + "/downloads/";
 	public LocalDataCollectorCrawler() {
 		myCrawlStat = new CrawlStat();
 	}
-
+	String checkWebAddress = Addresses.webAddressToBeChecked;
 	@Override
 	public boolean shouldVisit(WebURL url) {
 		String href = url.getURL().toLowerCase();
-		return !filters.matcher(href).matches() && href.startsWith("http://www.qut.edu.au/");
+		return !filters.matcher(href).matches() && href.startsWith(checkWebAddress);
 	}
 
 	@Override
