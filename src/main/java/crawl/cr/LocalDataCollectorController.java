@@ -34,11 +34,22 @@ public class LocalDataCollectorController {
 			System.out.println("\t numberOfCralwers (number of concurrent threads)");
 			return;
 		}*/
-		String rootFolder = "C:/crawl2/another";
+		String rootFolder = "C:/crawl/another";
 		String webAddress = "http://www.qut.edu.au/";
+		int numberOfCrawlers = 100;
+		if (args.length > 1 && args[1] != null) {
+			webAddress = args[1];
+		}
+		if (args.length > 2 && args[2] != null) {
+			rootFolder = args[2];
+		}
+		if (args.length > 3 && args[3] != null) {
+			numberOfCrawlers = Integer.valueOf(args[3]);
+		}
+		
 		Addresses.webAddressToBeChecked = webAddress;
 		Addresses.fileLocation = rootFolder;
-		int numberOfCrawlers = 100;
+		
 		CrawlConfig config = new CrawlConfig();
 		config.setCrawlStorageFolder(rootFolder);
 		//config.setMaxPagesToFetch(10);
