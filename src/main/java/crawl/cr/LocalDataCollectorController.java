@@ -17,6 +17,8 @@
 
 package crawl.cr;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
@@ -35,19 +37,28 @@ public class LocalDataCollectorController {
 			return;
 		}*/
 		String rootFolder = "C:/crawl/another";
-		String webAddress = "http://www.qut.edu.au/";
+		String webAddress = "http://qut.edu.au/";
 		int numberOfCrawlers = 100;
+		if (args.length > 0 && args[0] != null) {
+			webAddress = args[0];
+			System.out.println("Web address is " + webAddress);
+		}
 		if (args.length > 1 && args[1] != null) {
-			webAddress = args[1];
+			rootFolder = args[1];
 		}
 		if (args.length > 2 && args[2] != null) {
-			rootFolder = args[2];
+			numberOfCrawlers = Integer.valueOf(args[2]);
 		}
-		if (args.length > 3 && args[3] != null) {
-			numberOfCrawlers = Integer.valueOf(args[3]);
+		String checkWebAddress = "";
+		try {
+			URL checkURL = new URL(webAddress);
+			checkWebAddress = checkURL.getHost() + checkURL.getFile();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
-		Addresses.webAddressToBeChecked = webAddress;
+		Addresses.webAddressToBeChecked = checkWebAddress;
 		Addresses.fileLocation = rootFolder;
 		
 		CrawlConfig config = new CrawlConfig();

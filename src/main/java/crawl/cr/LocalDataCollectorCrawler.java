@@ -40,15 +40,18 @@ public class LocalDataCollectorCrawler extends WebCrawler {
 			+ "|wav|avi|mov|mpeg|ram|m4v|pdf" + "|rm|smil|wmv|swf|wma|zip|rar|gz))$");
 
 	CrawlStat myCrawlStat;
-	String downloadFolder = Addresses.fileLocation + "/downloads/";
+	String downloadFolder = Addresses.fileLocation + "/download/";
 	public LocalDataCollectorCrawler() {
 		myCrawlStat = new CrawlStat();
 	}
 	String checkWebAddress = Addresses.webAddressToBeChecked;
+	
+	
+	
 	@Override
 	public boolean shouldVisit(WebURL url) {
 		String href = url.getURL().toLowerCase();
-		return !filters.matcher(href).matches() && href.startsWith(checkWebAddress);
+		return !filters.matcher(href).matches() && href.contains(checkWebAddress);
 	}
 
 	@Override
