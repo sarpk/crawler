@@ -37,7 +37,7 @@ public class LocalDataCollectorController {
 			return;
 		}*/
 		String rootFolder = "C:/crawl/another";
-		String webAddress = "http://qut.edu.au/";
+		String webAddress = "http://www.student.qut.edu.au/";
 		int numberOfCrawlers = 100;
 		if (args.length > 0 && args[0] != null) {
 			webAddress = args[0];
@@ -68,6 +68,7 @@ public class LocalDataCollectorController {
 
 		PageFetcher pageFetcher = new PageFetcher(config);
 		RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
+		robotstxtConfig.setEnabled(false);
 		RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
 		CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
 
