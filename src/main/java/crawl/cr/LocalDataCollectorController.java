@@ -30,25 +30,36 @@ import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 public class LocalDataCollectorController {
 
 	public static void main(String[] args) throws Exception {
-		/*if (args.length != 2) {
-			System.out.println("Needed parameters: ");
-			System.out.println("\t rootFolder (it will contain intermediate crawl data)");
-			System.out.println("\t numberOfCralwers (number of concurrent threads)");
-			return;
-		}*/
+		/*
+		 * if (args.length != 2) { System.out.println("Needed parameters: ");
+		 * System
+		 * .out.println("\t rootFolder (it will contain intermediate crawl data)"
+		 * );
+		 * System.out.println("\t numberOfCralwers (number of concurrent threads)"
+		 * ); return; }
+		 */
 		String rootFolder = "C:/crawl3/another";
 		String webAddress = "http://www.student.qut.edu.au/studying";
 		int numberOfCrawlers = 100;
-		if (args.length > 0 && args[0] != null) {
-			webAddress = args[0];
-			System.out.println("Web address is " + webAddress);
+
+		String usage = "WebCrawler"
+				+ " [-site http address] [-folder ROOT_FOLDER] [-crawlers CRAWLER_AMOUNT]\n\n";
+		for (int i = 0; i < args.length; i++) {
+			if ("-site".equals(args[i])) {
+				webAddress = args[i + 1];
+				i++;
+			} else if ("-folder".equals(args[i])) {
+				rootFolder = args[i + 1];
+				i++;
+			} else if ("-crawlers".equals(args[i])) {
+				numberOfCrawlers = Integer.valueOf(args[i + 1]);
+			}
 		}
-		if (args.length > 1 && args[1] != null) {
-			rootFolder = args[1];
+		if (rootFolder == null) {
+			System.err.println("Usage: " + usage);
+			System.exit(1);
 		}
-		if (args.length > 2 && args[2] != null) {
-			numberOfCrawlers = Integer.valueOf(args[2]);
-		}
+
 		String checkWebAddress = "";
 		try {
 			URL checkURL = new URL(webAddress);
@@ -57,23 +68,25 @@ public class LocalDataCollectorController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		Addresses.webAddressToBeChecked = checkWebAddress;
 		Addresses.fileLocation = rootFolder;
-		
+
 		CrawlConfig config = new CrawlConfig();
 		config.setCrawlStorageFolder(rootFolder);
-		//config.setMaxPagesToFetch(1000);
+		// config.setMaxPagesToFetch(1000);
 		config.setPolitenessDelay(5);
 
 		PageFetcher pageFetcher = new PageFetcher(config);
 		RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
 		robotstxtConfig.setEnabled(false);
-		RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
-		CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
+		RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig,
+				pageFetcher);
+		CrawlController controller = new CrawlController(config, pageFetcher,
+				robotstxtServer);
 
 		controller.addSeed(webAddress);
-		
+
 		controller.start(LocalDataCollectorCrawler.class, numberOfCrawlers);
 
 		List<Object> crawlersLocalData = controller.getCrawlersLocalData();
