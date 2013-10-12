@@ -4,10 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -19,6 +17,10 @@ public class FileCreator {
 	private String downloadP = null;
 	private WebURL pageURL = null;
 	private String dContent = null;
+	private static int RAND_AMOUNT = 16;
+	private static String SPLITTER = " ; ";
+	private static String FILEEXT = ".txt";
+	private static ThreadBlock block = null;
 
 	static String readFile(String path, Charset encoding) throws IOException {
 		byte[] encoded = Files.readAllBytes(Paths.get(path));
@@ -42,69 +44,87 @@ public class FileCreator {
 			urlNotEncoded += urlSubs[i] + "/";
 		}
 
-		String pathEncoded = urlSubs[urlSubs.length - 1];
-		try {
-			pathEncoded = URLEncoder.encode(urlSubs[urlSubs.length - 1],
-					"UTF-8");
-		} catch (UnsupportedEncodingException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		String downloadPath = downloadFolder + urlNotEncoded + pathEncoded
-				+ ".txt";
+		/*
+		 * String pathEncoded = urlSubs[urlSubs.length - 1]; try { pathEncoded =
+		 * URLEncoder.encode(urlSubs[urlSubs.length - 1], "UTF-8"); } catch
+		 * (UnsupportedEncodingException e1) { // TODO Auto-generated catch
+		 * block e1.printStackTrace(); } String downloadPath = downloadFolder +
+		 * urlNotEncoded + pathEncoded + TXTEXT;
+		 * 
+		 * File f = new File(downloadPath); f.getParentFile().mkdirs();
+		 */
 		downloadP = downloadFolder + urlNotEncoded;
-		File f = new File(downloadPath);
-		f.getParentFile().mkdirs();
+		File f = new File(downloadP + "a");
+		f.getParentFile().mkdirs();// create all subfolders
+		block = ThreadBlock.getInstance();
 	}
 
-	public synchronized void writeToFile() {
-		String alphaNumerics = "qwertyuiopasdfghjklzxcvbnm1234567890";
-		String t = "";
-		for (int i = 0; i < 16; i++) {
-			t += alphaNumerics.charAt((int) (Math.random() * alphaNumerics
-					.length()));
-		}
-		t += ".txt";
-		String dPath = downloadP + t;
-		File f = new File(dPath);
-		while (f.exists()) {
-			System.out.println("Exists " + dPath);
-			t = "";
-			for (int i = 0; i < 16; i++) {
+	public void writeToFile() {
+			String alphaNumerics = "qwertyuiopasdfghjklzxcvbnm1234567890";
+			String t = "";
+			for (int i = 0; i < RAND_AMOUNT; i++) {
 				t += alphaNumerics.charAt((int) (Math.random() * alphaNumerics
 						.length()));
 			}
-			t += ".txt";
-			dPath = downloadP + t;
-			f = new File(dPath);
-		}
-		
-
-		try {
-			PrintWriter out = new PrintWriter(dPath);
-			out.println(dContent);
-			out.close();
-			String indexPath = downloadP + "indexasd.dat";
-			String content = "";
-			File indexExist = new File(indexPath);
-			if (indexExist.exists()) {
-				content = readFile(indexPath, Charset.defaultCharset());
+			t += FILEEXT;
+			String dPath = downloadP + t;
+			synchronized (block) {
+			File f = new File(dPath);
+			while (f.exists()) {
+				System.out.println("Exists " + dPath);
+				t = "";
+				for (int i = 0; i < RAND_AMOUNT; i++) {
+					t += alphaNumerics
+							.charAt((int) (Math.random() * alphaNumerics
+									.length()));
+				}
+				t += FILEEXT;
+				dPath = downloadP + t;
+				f = new File(dPath);
 			}
-			PrintWriter indexW = new PrintWriter(indexPath);
-			indexW.print(content);
-			indexW.println(t + " ; " + pageURL);
-			indexW.close();
 
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			try {
+				// write index so that we can know which file has which URL
+				String indexPath = downloadP + "index.dat";
+				String content = "";
+				File indexExist = new File(indexPath);
+				if (indexExist.exists()) {
+					content = readFile(indexPath, Charset.defaultCharset());
+				}
+				int indexFound = content.indexOf(pageURL.toString());
+
+				if (indexFound == -1) {
+					PrintWriter indexW = new PrintWriter(indexPath);
+					indexW.print(content);
+					indexW.println(t + SPLITTER + pageURL);
+					indexW.close();
+				} else {// If file exists
+					System.out.println("Else here " + pageURL);
+					int firstSubL = indexFound - SPLITTER.length()
+							- FILEEXT.length() - RAND_AMOUNT;
+					dPath = downloadP
+							+ content.substring(firstSubL, indexFound
+									- SPLITTER.length());// change the file name
+															// so that it would
+															// be overwritten
+					System.out.println("end Else");
+				}
+
+				// write the content
+				PrintWriter webContent = new PrintWriter(dPath);
+				webContent.println(dContent);
+				webContent.close();
+
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println(dPath);
+			System.out.println(pageURL);
 		}
-		System.out.println(dPath);
-		System.out.println(pageURL);
-
 	}
 
 }

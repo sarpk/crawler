@@ -36,7 +36,7 @@ public class LocalDataCollectorController {
 			System.out.println("\t numberOfCralwers (number of concurrent threads)");
 			return;
 		}*/
-		String rootFolder = "C:/crawl/another";
+		String rootFolder = "C:/crawl3/another";
 		String webAddress = "http://www.student.qut.edu.au/studying";
 		int numberOfCrawlers = 100;
 		if (args.length > 0 && args[0] != null) {
