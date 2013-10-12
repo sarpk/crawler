@@ -65,7 +65,7 @@ public class LocalDataCollectorCrawler extends WebCrawler {
 			myCrawlStat.incTotalLinks(links.size());
 			
 			String content = parseData.getText();
-			URL addressURL = null;
+			/*URL addressURL = null;
 			try {
 				addressURL = new URL(page.getWebURL().toString());
 			} catch (MalformedURLException e2) {
@@ -100,9 +100,9 @@ public class LocalDataCollectorCrawler extends WebCrawler {
 			catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-			System.out.println("Downloaded path is " + downloadPath);
-			System.out.println("URL orig is " + page.getWebURL());
+			}*/
+			FileCreator newFile = new FileCreator(downloadFolder, content, page.getWebURL());
+			newFile.writeToFile();
 			/*String searchIt = "Engineering";
 			if (content.toLowerCase().contains(searchIt.toLowerCase())) {
 				System.out.println(searchIt + " is found on " + page.getWebURL().getURL() );

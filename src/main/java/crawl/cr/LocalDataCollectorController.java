@@ -37,7 +37,7 @@ public class LocalDataCollectorController {
 			return;
 		}*/
 		String rootFolder = "C:/crawl/another";
-		String webAddress = "http://www.student.qut.edu.au/";
+		String webAddress = "http://www.student.qut.edu.au/studying";
 		int numberOfCrawlers = 100;
 		if (args.length > 0 && args[0] != null) {
 			webAddress = args[0];
@@ -63,7 +63,7 @@ public class LocalDataCollectorController {
 		
 		CrawlConfig config = new CrawlConfig();
 		config.setCrawlStorageFolder(rootFolder);
-		//config.setMaxPagesToFetch(10);
+		//config.setMaxPagesToFetch(1000);
 		config.setPolitenessDelay(5);
 
 		PageFetcher pageFetcher = new PageFetcher(config);
