@@ -17,16 +17,12 @@
 
 package crawl.cr;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
@@ -63,8 +59,14 @@ public class LocalDataCollectorCrawler extends WebCrawler {
 			HtmlParseData parseData = (HtmlParseData) page.getParseData();
 			List<WebURL> links = parseData.getOutgoingUrls();
 			myCrawlStat.incTotalLinks(links.size());
+
+
+			String html = parseData.getHtml();
 			
-			String content = parseData.getText();
+
+			Document doc = Jsoup.parse(html);
+
+			String content = doc.body().text();
 			/*URL addressURL = null;
 			try {
 				addressURL = new URL(page.getWebURL().toString());

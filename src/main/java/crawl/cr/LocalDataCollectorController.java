@@ -39,8 +39,8 @@ public class LocalDataCollectorController {
 		 * ); return; }
 		 */
 		String rootFolder = "C:/crawl3/another";
-		String webAddress = "http://www.student.qut.edu.au/studying";
-		int numberOfCrawlers = 100;
+		String webAddress = "http://www.student.qut.edu.au/studying/units/unit?cal=7&idunit=44535&unitCode=MAB121";
+		int numberOfCrawlers = 10;
 
 		String usage = "WebCrawler"
 				+ " [-site http address] [-folder ROOT_FOLDER] [-crawlers CRAWLER_AMOUNT]\n\n";
@@ -75,7 +75,7 @@ public class LocalDataCollectorController {
 		CrawlConfig config = new CrawlConfig();
 		config.setCrawlStorageFolder(rootFolder);
 		// config.setMaxPagesToFetch(1000);
-		config.setPolitenessDelay(5);
+		config.setPolitenessDelay(50);
 
 		PageFetcher pageFetcher = new PageFetcher(config);
 		RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
