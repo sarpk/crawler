@@ -39,11 +39,19 @@ public class LocalDataCollectorController {
 		 * ); return; }
 		 */
 		String rootFolder = "C:/crawl3/another";
-		String webAddress = "http://www.student.qut.edu.au/studying/units/unit?cal=7&idunit=44535&unitCode=MAB121";
+		String webAddress = "http://www.student.qut.edu.au/studying";
+		String checkWebAddress = "";
+		String robotName = "FunnelBack";
+		boolean robotsEnabled = true;
 		int numberOfCrawlers = 10;
+		int politenessDelay = 1000;
+		int amountOfPages = -1;
+		int depthOfPages = -1;
 
 		String usage = "WebCrawler"
-				+ " [-site http address] [-folder ROOT_FOLDER] [-crawlers CRAWLER_AMOUNT]\n\n";
+				+ " [-site http address] [-baseaddr http address] [-folder ROOT_FOLDER]"
+				+ " [-crawlers CRAWLER_AMOUNT] [-robots true/false] [-robotname useragentname]"
+				+ " [-politeness DELAY_MS] [-depth CRAWL_DEPTH] [-amount PAGE_AMOUNT]\n\n";
 		for (int i = 0; i < args.length; i++) {
 			if ("-site".equals(args[i])) {
 				webAddress = args[i + 1];
@@ -53,6 +61,20 @@ public class LocalDataCollectorController {
 				i++;
 			} else if ("-crawlers".equals(args[i])) {
 				numberOfCrawlers = Integer.valueOf(args[i + 1]);
+			} else if ("-baseaddr".equals(args[i])) {
+				checkWebAddress = args[i + 1];
+			} else if ("-robots".equals(args[i])) {
+				if (args[i + 1].equals("false")) {
+					robotsEnabled = false;
+				}
+			} else if ("-robotname".equals(args[i])) {
+				robotName = args[i + 1];
+			} else if ("-politeness".equals(args[i])) {
+				politenessDelay = Integer.valueOf(args[i + 1]);
+			} else if ("-depth".equals(args[i])) {
+				depthOfPages = Integer.valueOf(args[i + 1]);
+			} else if ("-amount".equals(args[i])) {
+				amountOfPages = Integer.valueOf(args[i + 1]);
 			}
 		}
 		if (rootFolder == null) {
@@ -60,13 +82,14 @@ public class LocalDataCollectorController {
 			System.exit(1);
 		}
 
-		String checkWebAddress = "";
-		try {
-			URL checkURL = new URL(webAddress);
-			checkWebAddress = checkURL.getHost() + checkURL.getFile();
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (checkWebAddress.equals("")) {
+			try {
+				URL checkURL = new URL(webAddress);
+				checkWebAddress = checkURL.getHost() + checkURL.getFile();
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		Addresses.webAddressToBeChecked = checkWebAddress;
@@ -74,12 +97,15 @@ public class LocalDataCollectorController {
 
 		CrawlConfig config = new CrawlConfig();
 		config.setCrawlStorageFolder(rootFolder);
-		// config.setMaxPagesToFetch(1000);
-		config.setPolitenessDelay(50);
+		System.out.println(config.getMaxPagesToFetch());
+		config.setMaxPagesToFetch(amountOfPages);
+		config.setMaxDepthOfCrawling(depthOfPages);
+		config.setPolitenessDelay(politenessDelay);
 
 		PageFetcher pageFetcher = new PageFetcher(config);
 		RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
-		robotstxtConfig.setEnabled(false);
+		robotstxtConfig.setUserAgentName(robotName);
+		robotstxtConfig.setEnabled(robotsEnabled);
 		RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig,
 				pageFetcher);
 		CrawlController controller = new CrawlController(config, pageFetcher,
