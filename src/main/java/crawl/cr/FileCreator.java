@@ -43,6 +43,9 @@ public class FileCreator {
 		for (int i = 0; i < urlSubs.length - 1; i++) {
 			urlNotEncoded += urlSubs[i] + "/";
 		}
+		if (!urlNotEncoded.endsWith("/")) {
+			urlNotEncoded = urlNotEncoded + "/";
+		}
 
 		/*
 		 * String pathEncoded = urlSubs[urlSubs.length - 1]; try { pathEncoded =
@@ -99,7 +102,7 @@ public class FileCreator {
 					indexW.println(t + SPLITTER + pageURL);
 					indexW.close();
 				} else {// If file exists
-					System.out.println("Else here " + pageURL);
+					//System.out.println("Else here " + pageURL);
 					int firstSubL = indexFound - SPLITTER.length()
 							- FILEEXT.length() - RAND_AMOUNT;
 					dPath = downloadP
@@ -107,7 +110,7 @@ public class FileCreator {
 									- SPLITTER.length());// change the file name
 															// so that it would
 															// be overwritten
-					System.out.println("end Else");
+					//System.out.println("end Else");
 				}
 
 				// write the content
@@ -122,8 +125,8 @@ public class FileCreator {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			System.out.println(dPath);
-			System.out.println(pageURL);
+			//System.out.println(dPath);
+			//System.out.println(pageURL);
 		}
 	}
 
