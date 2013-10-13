@@ -97,7 +97,6 @@ public class LocalDataCollectorController {
 
 		CrawlConfig config = new CrawlConfig();
 		config.setCrawlStorageFolder(rootFolder);
-		System.out.println(config.getMaxPagesToFetch());
 		config.setMaxPagesToFetch(amountOfPages);
 		config.setMaxDepthOfCrawling(depthOfPages);
 		config.setPolitenessDelay(politenessDelay);
