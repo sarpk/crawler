@@ -39,7 +39,7 @@ public class LocalDataCollectorController {
 		 * ); return; }
 		 */
 		String rootFolder = "C:/crawl3/another";
-		String webAddress = "http://www.student.qut.edu.au/studying";
+		String webAddress = "http://www.qut.edu.au/";
 		String checkWebAddress = "";
 		String robotName = "FunnelBack";
 		boolean robotsEnabled = true;
